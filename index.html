@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>ICMS - International Conference Management System | Pr BERRABAH HAMZA MADJID</title>
+    <!-- Font Awesome 6 (free) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+        }
+
+        body {
+            background-color: #e6f7e6;  /* light green background */
+            color: #1e1e1e;
+            line-height: 1.5;
+        }
+
+        /* main container */
+        .container {
+            max-width: 1300px;
+            margin: 0 auto;
+            padding: 20px 25px;
+        }
+
+        /* header with professor name */
+        .header {
+            background: #2c5e2c;
+            padding: 25px 20px;
+            border-radius: 20px 20px 20px 20px;
+            margin-bottom: 30px;
+            text-align: center;
+            box-shadow: 0 8px 18px rgba(0,0,0,0.1);
+            border: 1px solid #d4a11e;
+        }
+        .header h1 {
+            font-size: 2.3rem;
+            color: #ff8c00;   /* orange */
+            text-shadow: 1px 1px 2px #1e3a1e;
+            letter-spacing: 1px;
+        }
+        .header h1 span {
+            color: #FFD966;
+            font-weight: normal;
+        }
+        .header p {
+            color: #f0f0f0;
+            font-size: 1.1rem;
+            margin-top: 8px;
+        }
+
+        /* tabs / navigation */
+        .nav-tabs {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            justify-content: center;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #c0e0c0;
+            padding-bottom: 10px;
+        }
+        .tab-btn {
+            background: #2e7d32;
+            border: none;
+            padding: 12px 28px;
+            font-size: 1rem;
+            font-weight: bold;
+            border-radius: 40px;
+            cursor: pointer;
+            color: white;
+            transition: 0.2s;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .tab-btn i {
+            margin-right: 8px;
+        }
+        .tab-btn.active {
+            background: #ff8c00;
+            color: #1e3a1e;
+            box-shadow: 0 4px 12px rgba(255,140,0,0.3);
+        }
+        .tab-btn:hover:not(.active) {
+            background: #1b5e20;
+            transform: translateY(-2px);
+        }
+
+        /* panels */
+        .panel {
+            display: none;
+            background: #f9fff7;
+            border-radius: 28px;
+            padding: 30px 28px;
+            margin-bottom: 35px;
+            box-shadow: 0 12px 28px rgba(0,0,0,0.08);
+            border: 1px solid #cfe3cf;
+            transition: 0.2s;
+        }
+        .panel.active-panel {
+            display: block;
+        }
+
+        h2 {
+            color: #ff8c00;
+            border-left: 6px solid #ff8c00;
+            padding-left: 18px;
+            margin-bottom: 25px;
+            font-size: 1.9rem;
+        }
+        h3 {
+            color: #2c5e2c;
+            margin: 20px 0 12px 0;
+        }
+
+        /* forms */
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            font-weight: 600;
+            display: block;
+            margin-bottom: 8px;
+            color: #1e3a1e;
+        }
+        input, textarea, select {
+            width: 100%;
+            padding: 12px 14px;
+            border: 1px solid #bdd4bd;
+            border-radius: 28px;
+            background: white;
+            font-size: 1rem;
+            transition: 0.2s;
+        }
+        input:focus, textarea:focus, select:focus {
+            outline: none;
+            border-color: #ff8c00;
+            box-shadow: 0 0 0 3px rgba(255,140,0,0.2);
+        }
+        textarea {
+            border-radius: 24px;
+            resize: vertical;
+        }
+        .btn-submit, .btn-admin, .btn-send, .btn-upload {
+            background: #ff8c00;
+            color: #1e3a1e;
+            border: none;
+            padding: 12px 28px;
+            border-radius: 40px;
+            font-weight: bold;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: 0.2s;
+            margin-top: 10px;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .btn-submit:hover, .btn-admin:hover {
+            background: #e07b00;
+            transform: scale(1.02);
+            color: black;
+        }
+        .admin-zone {
+            background: #eef5ea;
+            padding: 20px;
+            border-radius: 28px;
+            margin-top: 30px;
+            border: 1px dashed #ff8c00;
+        }
+        .success-msg {
+            background: #c8e6c9;
+            color: #1f5f1f;
+            padding: 12px;
+            border-radius: 40px;
+            margin-top: 20px;
+            text-align: center;
+        }
+        .error-msg {
+            background: #ffe0b3;
+            color: #b45f06;
+            padding: 12px;
+            border-radius: 40px;
+            margin-top: 20px;
+        }
+        .article-list {
+            background: white;
+            border-radius: 24px;
+            padding: 15px;
+            margin-top: 20px;
+            max-height: 500px;
+            overflow-y: auto;
+        }
+        .article-item {
+            border-bottom: 1px solid #cfe3cf;
+            padding: 16px;
+            margin-bottom: 8px;
+        }
+        .photo-grid img {
+            max-width: 100%;
+            border-radius: 20px;
+            margin: 10px 0;
+            border: 2px solid #ff8c00;
+        }
+        footer {
+            text-align: center;
+            padding: 25px;
+            color: #2e5c2e;
+            border-top: 1px solid #c0ddc0;
+            margin-top: 20px;
+        }
+        @media (max-width: 680px) {
+            .container { padding: 12px; }
+            .tab-btn { padding: 8px 16px; font-size: 0.8rem;}
+            .header h1 { font-size: 1.7rem;}
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <!-- Header with professor name (above the site) -->
+    <div class="header">
+        <h1>Pr BERRABAH HAMZA MADJID <span>| International Conference System</span></h1>
+        <p><i class="fas fa-globe"></i> Official platform for managing scientific events | National & International</p>
+    </div>
+
+    <!-- Navigation Tabs (site pages) -->
+    <div class="nav-tabs">
+        <button class="tab-btn active" data-panel="homePanel"><i class="fas fa-home"></i> Home</button>
+        <button class="tab-btn" data-panel="submitPanel"><i class="fas fa-upload"></i> Submit Article</button>
+        <button class="tab-btn" data-panel="proceedingsPanel"><i class="fas fa-book"></i> Proceedings</button>
+        <button class="tab-btn" data-panel="messagesPanel"><i class="fas fa-envelope"></i> Messages</button>
+        <button class="tab-btn" data-panel="certifPanel"><i class="fas fa-certificate"></i> Certificates</button>
+        <button class="tab-btn" data-panel="adminPanel"><i class="fas fa-lock"></i> Admin Access</button>
+    </div>
+
+    <!-- ========================= PANEL 1: HOME ========================= -->
+    <div id="homePanel" class="panel active-panel">
+        <h2><i class="fas fa-chalkboard-teacher"></i> Welcome to the Conference</h2>
+        <div style="color: #2c3e2c; font-size: 1.1rem; margin-bottom: 20px;">
+            <p><strong>International Conference on Advanced Materials & Renewable Energy (IC-AMRE 2026)</strong><br>
+            Organizer: Pr BERRABAH HAMZA MADJID – University of Relizane.<br>
+            This professional platform allows you to submit your manuscripts, access proceedings, and communicate efficiently.</p>
+        </div>
+        <!-- Zone de texte (rich editable) -->
+        <div style="background: #fff7e8; padding: 20px; border-radius: 28px; margin: 25px 0;" contenteditable="true" id="editableTextZone">
+            <h3 style="color:#ff8c00;">✍️ Important dates (editable text)</h3>
+            <p><strong>Paper submission deadline:</strong> June 30, 2026<br>
+            <strong>Notification of acceptance:</strong> July 25, 2026<br>
+            <strong>Conference dates:</strong> November 10-12, 2026 (Hybrid mode)<br>
+            All accepted papers will be published in indexed proceedings.</p>
+            <p><i class="fas fa-pen-fancy"></i> You can click this text box and modify directly (Admin mode live edit).</p>
+        </div>
+
+        <!-- Insert photos -->
+        <h3><i class="fas fa-images"></i> Conference Gallery (Click to add photos)</h3>
+        <div class="photo-grid" id="photoGallery">
+            <img src="https://placehold.co/600x400/e0f0e0/2c5e2c?text=Conference+Hall" width="260" style="margin:5px; border-radius:20px;">
+            <img src="https://placehold.co/600x400/ffeedd/ff8c00?text=Plenary+Session" width="260" style="margin:5px; border-radius:20px;">
+        </div>
+        <div style="margin: 15px 0;">
+            <input type="file" id="photoUploadInput" accept="image/*" style="width:auto; display:inline-block;">
+            <button class="btn-upload" onclick="addNewPhoto()"><i class="fas fa-plus-circle"></i> Insert Photo</button>
+        </div>
+
+        <!-- Insert Word template -->
+        <h3><i class="fas fa-file-word"></i> Conference Template (Word file)</h3>
+        <p>Upload the official Word template (.doc/.docx) that authors must follow.</p>
+        <input type="file" id="templateUpload" accept=".doc,.docx">
+        <button class="btn-upload" onclick="uploadTemplate()"><i class="fas fa-cloud-upload-alt"></i> Save Template</button>
+        <div id="templateStatus" class="success-msg" style="display:none;"></div>
+        <div id="currentTemplateLink"></div>
+    </div>
+
+    <!-- ========================= PANEL 2: SUBMIT ARTICLE ========================= -->
+    <div id="submitPanel" class="panel">
+        <h2><i class="fas fa-file-alt"></i> Submit your article</h2>
+        <form id="submissionForm">
+            <div class="form-group"><label>First Name *</label><input type="text" id="firstName" required></div>
+            <div class="form-group"><label>Last Name *</label><input type="text" id="lastName" required></div>
+            <div class="form-group"><label>Email *</label><input type="email" id="authorEmail" required></div>
+            <div class="form-group"><label>Co-authors (full names)</label><input type="text" id="coAuthors" placeholder="e.g. John Smith, Maria Garcia"></div>
+            <div class="form-group"><label>Article Title *</label><input type="text" id="articleTitle" required></div>
+            <div class="form-group"><label>Abstract *</label><textarea rows="5" id="abstract" required></textarea></div>
+            <div class="form-group"><label>Upload manuscript (PDF/DOCX) *</label><input type="file" id="manuscriptFile" accept=".pdf,.docx"></div>
+            <button type="button" class="btn-submit" onclick="submitArticle()"><i class="fas fa-paper-plane"></i> Submit Article</button>
+        </form>
+        <div id="submitMsg"></div>
+    </div>
+
+    <!-- ========================= PANEL 3: PROCEEDINGS ========================= -->
+    <div id="proceedingsPanel" class="panel">
+        <h2><i class="fas fa-archive"></i> Conference Proceedings</h2>
+        <p>List of submitted papers (authors, title, co-authors, email, abstract).</p>
+        <button class="btn-admin" onclick="refreshProceedings()"><i class="fas fa-sync-alt"></i> Refresh Proceedings</button>
+        <div id="proceedingsList" class="article-list">Loading...</div>
+        <button class="btn-admin" onclick="exportProceedingsCSV()"><i class="fas fa-download"></i> Export Proceedings (CSV)</button>
+    </div>
+
+    <!-- ========================= PANEL 4: MASS MESSAGES ========================= -->
+    <div id="messagesPanel" class="panel">
+        <h2><i class="fas fa-bullhorn"></i> Broadcast to participants</h2>
+        <div class="form-group"><label>Subject</label><input type="text" id="msgSubject" placeholder="Conference update"></div>
+        <div class="form-group"><label>Message content</label><textarea rows="6" id="msgBody" placeholder="Write your announcement here..."></textarea></div>
+        <button class="btn-submit" onclick="sendMassEmail()"><i class="fas fa-envelope-open-text"></i> Send to all authors</button>
+        <div id="broadcastMsg"></div>
+    </div>
+
+    <!-- ========================= PANEL 5: CERTIFICATES ========================= -->
+    <div id="certifPanel" class="panel">
+        <h2><i class="fas fa-certificate"></i> Generate certificates (collective)</h2>
+        <p>Upload a single Word certificate model (.docx) – it will be sent individually to all submitting authors.</p>
+        <input type="file" id="certifModelUpload" accept=".docx">
+        <button class="btn-submit" onclick="uploadCertificateModel()"><i class="fas fa-upload"></i> Upload certificate model</button>
+        <div style="margin-top:25px;">
+            <button class="btn-submit" onclick="sendBulkCertificates()"><i class="fas fa-trophy"></i> Send certificates to all participants</button>
+        </div>
+        <div id="certifStatus"></div>
+    </div>
+
+    <!-- ========================= PANEL 6: ADMIN ACCESS ========================= -->
+    <div id="adminPanel" class="panel">
+        <h2><i class="fas fa-user-shield"></i> Admin Dashboard (Full control)</h2>
+        <div class="admin-zone">
+            <p><i class="fas fa-key"></i> You have full editing rights on all pages<br>
+            ✅ Modify texts (click on any editable zone in Home page)<br>
+            ✅ Manage photo gallery and remove items<br>
+            ✅ Delete submissions, edit proceedings data<br>
+            ✅ Modify template, upload any resource<br>
+            ✅ Send collective emails & certificates<br>
+            ✅ All data stored in browser localStorage — You can export/import whole database.<br>
+            <strong style="color:#ff8c00;">🔐 Password protected access (fixed password).</strong></p>
+            <button class="btn-admin" onclick="verifyAdminAndShowTools()"><i class="fas fa-unlock-alt"></i> Unlock Admin Tools</button>
+            <div id="adminTools" style="display:none; margin-top:25px; background:#fff0db; padding:18px; border-radius:28px;">
+                <h3>Advanced Admin actions</h3>
+                <button onclick="clearAllSubmissions()">🗑️ Delete all submissions</button>
+                <button onclick="exportFullDatabase()">📀 Export all data (JSON)</button>
+                <button onclick="importDatabase()">📂 Import database</button>
+                <input type="file" id="importFileInput" style="display:none;" accept=".json" onchange="processImport(event)">
+                <p style="margin-top:12px;">* You can also edit proceedings entries directly in the proceedings panel (inline).</p>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <i class="fas fa-globe"></i> Pr BERRABAH HAMZA MADJID – Conference management system | Secure & professional interface
+    </footer>
+</div>
+
+<script>
+    // ========== FIXED ADMIN PASSWORD ==========
+    // 🔐 Votre mot de passe personnel : hamzaaa12AZ&&
+    const FIXED_ADMIN_PASSWORD = "hamzaaa12AZ&&";
+    
+    // Fonction pour afficher le mot de passe (optionnelle)
+    window.setAdminPassword = function() {
+        alert("🔒 Accès administrateur protégé par mot de passe.\n\nContactez l'administrateur pour plus d'informations.");
+    };
+    
+    // Vérification du mot de passe
+    window.verifyAdminAndShowTools = function() {
+        let pwdAttempt = prompt('🔐 ACCÈS ADMINISTRATEUR\n\nVeuillez entrer le mot de passe :');
+        if(pwdAttempt === FIXED_ADMIN_PASSWORD) {
+            document.getElementById('adminTools').style.display = 'block';
+            alert('✅ Accès administrateur accordé ! Bienvenue Pr BERRABAH HAMZA MADJID.');
+        } else {
+            alert('❌ Accès refusé. Mot de passe incorrect.');
+        }
+    };
+    
+    // ========== DATA STORAGE ==========
+    let submissions = JSON.parse(localStorage.getItem('conference_submissions')) || [];
+    let templateFile = localStorage.getItem('template_name') || null;
+    let certificateModel = localStorage.getItem('certif_model') || null;
+    let galleryPhotos = JSON.parse(localStorage.getItem('galleryPhotos')) || [
+        "https://placehold.co/600x400/e0f0e0/2c5e2c?text=Conference+Hall",
+        "https://placehold.co/600x400/ffeedd/ff8c00?text=Plenary+Session"
+    ];
+
+    function saveSubmissions() { localStorage.setItem('conference_submissions', JSON.stringify(submissions)); }
+    function saveGallery() { localStorage.setItem('galleryPhotos', JSON.stringify(galleryPhotos)); renderGallery(); }
+    
+    function renderGallery() {
+        const galleryDiv = document.getElementById('photoGallery');
+        if(galleryDiv) {
+            galleryDiv.innerHTML = '';
+            galleryPhotos.forEach((src, idx) => {
+                let img = document.createElement('img');
+                img.src = src;
+                img.width = 260;
+                img.style.margin = '5px';
+                img.style.borderRadius = '20px';
+                img.style.border = '2px solid #ff8c00';
+                let delBtn = document.createElement('button');
+                delBtn.innerHTML = '<i class="fas fa-trash-alt"></i> Remove';
+                delBtn.style.display = 'block';
+                delBtn.style.margin = '5px auto';
+                delBtn.style.background = '#c0392b';
+                delBtn.style.color = 'white';
+                delBtn.style.border = 'none';
+                delBtn.style.borderRadius = '20px';
+                delBtn.style.padding = '5px 12px';
+                delBtn.style.cursor = 'pointer';
+                delBtn.onclick = () => { galleryPhotos.splice(idx,1); saveGallery(); };
+                galleryDiv.appendChild(img);
+                galleryDiv.appendChild(delBtn);
+            });
+        }
+    }
+
+    function refreshProceedings() {
+        const container = document.getElementById('proceedingsList');
+        if(!container) return;
+        if(submissions.length === 0) { container.innerHTML = '<p>No submissions yet.</p>'; return; }
+        let html = '';
+        submissions.forEach((sub, idx) => {
+            html += `<div class="article-item">
+                        <strong>${escapeHtml(sub.firstName)} ${escapeHtml(sub.lastName)}</strong> | Email: ${escapeHtml(sub.email)}<br>
+                        <strong>Title:</strong> ${escapeHtml(sub.title)}<br>
+                        <strong>Co-authors:</strong> ${escapeHtml(sub.coAuthors || '—')}<br>
+                        <strong>Abstract:</strong> ${escapeHtml(sub.abstract.substring(0,150))}...<br>
+                        <strong>Article file:</strong> ${sub.fileName ? `<a href="${sub.fileData}" download="${sub.fileName}">📄 ${sub.fileName}</a>` : 'No file'}<br>
+                        <button onclick="deleteSubmission(${idx})" style="background:#c0392b; color:white; border:none; border-radius:30px; padding:5px 15px; margin-top:8px; cursor:pointer;">🗑️ Delete</button>
+                    </div>`;
+        });
+        container.innerHTML = html;
+    }
+    
+    function escapeHtml(str) { if(!str) return ''; return str.replace(/[&<>]/g, function(m) { if(m === '&') return '&amp;'; if(m === '<') return '&lt;'; if(m === '>') return '&gt;'; return m;}); }
+
+    window.deleteSubmission = function(idx) {
+        if(confirm('Remove submission permanently?')) {
+            submissions.splice(idx,1);
+            saveSubmissions();
+            refreshProceedings();
+            document.getElementById('submitMsg').innerHTML = '<div class="success-msg">Submission deleted.</div>';
+            setTimeout(()=>{document.getElementById('submitMsg').innerHTML='';},2000);
+        }
+    };
+
+    function submitArticle() {
+        let firstName = document.getElementById('firstName').value.trim();
+        let lastName = document.getElementById('lastName').value.trim();
+        let email = document.getElementById('authorEmail').value.trim();
+        let coAuthors = document.getElementById('coAuthors').value.trim();
+        let title = document.getElementById('articleTitle').value.trim();
+        let abstract = document.getElementById('abstract').value.trim();
+        let fileInput = document.getElementById('manuscriptFile');
+        if(!firstName || !lastName || !email || !title || !abstract) {
+            document.getElementById('submitMsg').innerHTML = '<div class="error-msg">Please fill required fields (*).</div>';
+            return;
+        }
+        
+        function saveSubmissionWithFile(fileData, fileName) {
+            let newSub = {
+                firstName: firstName, lastName: lastName, email: email, coAuthors: coAuthors,
+                title: title, abstract: abstract, fileData: fileData, fileName: fileName,
+                timestamp: new Date().toISOString()
+            };
+            submissions.push(newSub);
+            saveSubmissions();
+            document.getElementById('submitMsg').innerHTML = '<div class="success-msg">✅ Article submitted! Email notification has been sent to seminar Gmail (simulated).</div>';
+            console.log(`[AUTO EMAIL] To: seminar@conference.org ; Subject: New submission from ${firstName} ${lastName} ; Title: ${title}`);
+            alert(`📧 System would send notification to seminar Gmail: "${title}" submitted by ${firstName} ${lastName}`);
+            document.getElementById('submissionForm').reset();
+            refreshProceedings();
+            setTimeout(()=>{document.getElementById('submitMsg').innerHTML='';},3000);
+        }
+        
+        if(fileInput.files.length > 0) {
+            const reader = new FileReader();
+            reader.onload = function(e) { saveSubmissionWithFile(e.target.result, fileInput.files[0].name); };
+            reader.readAsDataURL(fileInput.files[0]);
+        } else {
+            saveSubmissionWithFile(null, null);
+        }
+    }
+    window.submitArticle = submitArticle;
+
+    window.sendMassEmail = function() {
+        let subject = document.getElementById('msgSubject').value;
+        let body = document.getElementById('msgBody').value;
+        if(!subject || !body) { alert('Fill subject and message'); return; }
+        let emails = submissions.map(s => s.email).filter(e => e && e.includes('@'));
+        if(emails.length === 0) { alert('No participants emails found.'); return; }
+        console.log(`Sending mass email to ${emails.length} recipients: ${subject} - ${body}`);
+        document.getElementById('broadcastMsg').innerHTML = `<div class="success-msg">📨 Mass message sent to ${emails.length} participants (simulated).</div>`;
+        alert(`[DEMO] Message would be sent to ${emails.length} participants. Real SMTP integration possible.`);
+        setTimeout(()=>{document.getElementById('broadcastMsg').innerHTML='';},3000);
+    };
+
+    window.sendBulkCertificates = function() {
+        if(submissions.length === 0) { alert('No submissions found.'); return; }
+        let model = localStorage.getItem('certif_model');
+        if(!model) { alert('Please upload a Word certificate model first (in Certificates tab).'); return; }
+        alert(`📜 Certificate model applied. Individual certificates would be generated & sent to ${submissions.length} authors. (Model stored locally).`);
+        document.getElementById('certifStatus').innerHTML = `<div class="success-msg">🎓 Certificates sent collectively to all participants (digital simulation).</div>`;
+    };
+
+    window.uploadCertificateModel = function() {
+        let certInput = document.getElementById('certifModelUpload');
+        if(certInput.files.length === 0) { alert('Select a .docx file'); return; }
+        let reader = new FileReader();
+        reader.onload = function(ev) {
+            localStorage.setItem('certif_model', ev.target.result);
+            localStorage.setItem('certif_model_name', certInput.files[0].name);
+            document.getElementById('certifStatus').innerHTML = '<div class="success-msg">Certificate model uploaded successfully.</div>';
+        };
+        reader.readAsDataURL(certInput.files[0]);
+    };
+
+    window.uploadTemplate = function() {
+        let tmp = document.getElementById('templateUpload');
+        if(tmp.files.length === 0) return;
+        let reader = new FileReader();
+        reader.onload = function(e) {
+            localStorage.setItem('template_file', e.target.result);
+            localStorage.setItem('template_file_name', tmp.files[0].name);
+            document.getElementById('templateStatus').style.display='block';
+            document.getElementById('templateStatus').innerHTML = '✅ Template saved!';
+            document.getElementById('currentTemplateLink').innerHTML = `<a href="${e.target.result}" download="${tmp.files[0].name}">📥 Download current template</a>`;
+            setTimeout(()=>{document.getElementById('templateStatus').style.display='none';},2000);
+        };
+        reader.readAsDataURL(tmp.files[0]);
+    };
+
+    window.addNewPhoto = function() {
+        let inputPhoto = document.getElementById('photoUploadInput');
+        if(inputPhoto.files && inputPhoto.files[0]) {
+            let reader = new FileReader();
+            reader.onload = function(ev) {
+                galleryPhotos.push(ev.target.result);
+                saveGallery();
+            };
+            reader.readAsDataURL(inputPhoto.files[0]);
+        } else { alert('Select an image.'); }
+    };
+
+    window.exportProceedingsCSV = function() {
+        let csvRows = [["First Name","Last Name","Email","Co-authors","Title","Abstract"]];
+        submissions.forEach(s => { csvRows.push([s.firstName,s.lastName,s.email,s.coAuthors,s.title,s.abstract.replace(/,/g,' ')]); });
+        let csvContent = "data:text/csv;charset=utf-8," + csvRows.map(e => e.join(",")).join("\n");
+        let link = document.createElement('a'); link.href = encodeURI(csvContent); link.download = "proceedings.csv"; link.click();
+    };
+
+    window.clearAllSubmissions = function() { if(confirm('Remove ALL papers?')){ submissions=[]; saveSubmissions(); refreshProceedings(); alert('All cleared'); } };
+    window.exportFullDatabase = function() { let data = JSON.stringify({submissions, galleryPhotos, templateName: localStorage.getItem('template_file_name')}); let a=document.createElement('a'); a.href='data:application/json,'+encodeURIComponent(data); a.download='conf_backup.json'; a.click(); };
+    window.importDatabase = function() { document.getElementById('importFileInput').click(); };
+    window.processImport = function(event) { let file=event.target.files[0]; let reader=new FileReader(); reader.onload=function(evt){ let imported=JSON.parse(evt.target.result); if(imported.submissions) submissions=imported.submissions; if(imported.galleryPhotos) galleryPhotos=imported.galleryPhotos; saveSubmissions(); saveGallery(); refreshProceedings(); alert('Database imported'); }; reader.readAsText(file); };
+
+    // Tabs navigation
+    const tabs = document.querySelectorAll('.tab-btn');
+    const panels = document.querySelectorAll('.panel');
+    tabs.forEach(btn => {
+        btn.addEventListener('click', () => {
+            let target = btn.getAttribute('data-panel');
+            panels.forEach(panel => panel.classList.remove('active-panel'));
+            document.getElementById(target).classList.add('active-panel');
+            tabs.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            if(target === 'proceedingsPanel') refreshProceedings();
+            if(target === 'homePanel') renderGallery();
+        });
+    });
+
+    // initial rendering
+    renderGallery();
+    refreshProceedings();
+    if(localStorage.getItem('template_file_name')) {
+        document.getElementById('currentTemplateLink').innerHTML = `<a href="${localStorage.getItem('template_file')}" download>📄 existing template: ${localStorage.getItem('template_file_name')}</a>`;
+    }
+    let savedText = localStorage.getItem('homeEditableText');
+    if(savedText && document.getElementById('editableTextZone')) {
+        document.getElementById('editableTextZone').innerHTML = savedText;
+    }
+    document.getElementById('editableTextZone')?.addEventListener('blur', function() {
+        localStorage.setItem('homeEditableText', this.innerHTML);
+    });
+</script>
+</body>
+</html>
